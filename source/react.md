@@ -106,6 +106,108 @@ props 是 React 父子component間溝通的橋樑。靜態（唯讀）。
 當 Component 愈疊愈多層，想要把資料從最頂層的Component傳到最底層的Component就會愈麻煩，就是所謂的 props 傳遞地獄。
 解決方法是使用後端框架 (EX: Redux) 將 state 集中起來，以便管理。
 
+### **this.refs**
+
+React 支持一種非常特殊的屬性 Ref ，你可以用來绑定到 render() 輸出的任何组件上。
+
+this.refs 顧名思義就是參考的意思，有點像dom的id的意思  
+
+```js
+ var MyComponent = React.createClass({
+      handleClick: function() {
+        this.refs.myInput.focus();
+      },
+      render: function() {
+        return (
+          <div>
+            <input type="text" ref="myInput" />
+            <input
+              type="button"
+              value="點我獲取焦點"
+              onClick={this.handleClick}
+            />
+          </div>
+        );
+      }
+    });
+    ReactDOM.render(
+      <MyComponent />,
+      document.getElementById('example')
+    );
+```
+
+* 你可以定義任何public method在你的Component裡，比如 this.refs.myInput.focus()
+* Refs 是訪問到Component内部 DOM node唯一可靠的方法
+* 當子组件删除時,Refs 會自動銷毀對子组件的reference
+
+
+### **List & Key**
+
+```js
+const numbers = [1, 2, 3, 4, 5];
+
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    <li>{number}</li>
+  );
+  return (
+    <ul>{listItems}</ul>
+  );
+}
+
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('app')
+);
+```
+當您運行此代碼時，將會收到一條警告
+**<font color='red'>"Warning: Each child in an array or iterator should have a unique \"key\" prop. Check the render method of `NumberList`. See https://fb.me/react-warning-keys for more information."</font>**
+
+讓我們分配一個key到我們的列表項裡面numbers.map()並修復缺少的key問題。  
+
+```js
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    <li key={number.toString()}>
+      {number}
+    </li>
+  );
+  return (
+    <ul>{listItems}</ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('app')
+);
+```
+
+通常，您會使用數據中的ID作為鍵：
+
+```js
+const todoItems = todos.map((todo) =>
+  <li key={todo.id}>
+    {todo.text}
+  </li>
+);
+```
+
+當您對已呈現的項目沒有穩定的ID時，可以使用項目索引作為最後一個手段的鍵：  
+
+```js
+const todoItems = todos.map((todo, index) =>
+  <li key={index}>
+    {todo.text}
+  </li>
+);
+```
+
+如果項目可以重新排序，我們不建議對鍵使用索引，因為這將很慢。
+
 ### **states**  
 
 states 是元件內部狀態。動態（可用 setState 改值）。

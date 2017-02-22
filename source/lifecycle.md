@@ -87,7 +87,7 @@ React 特性有描述 React 的主要撰寫方式有兩種：
 
 ### 1.一種是使用 ES6 Class  
   
-### 2.另外一種是 Stateless Components，使用 Functional Component 的寫法，單純渲染 UI。
+### 2.另外一種是 Stateless Components，使用 Functional Component 的寫法，單純render UI。
 
 ---
 
